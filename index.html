@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello, Vesselina</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script   src="https://code.jquery.com/jquery-3.0.0.js"   integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo="   crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+   <div class="container">
+    <div id="weather">
+     <div>
+     <div class="weather-icon"></div>
+     <div class="weather-temperature"></div>
+    </div>
+     <div class="weather-description"></div>
+     <div class="weather-city"></div>
+    </div>
+
+     <div id="time"></div>
+     <div id="greeting"></div>
+     <div id="fcont">
+      TODAY
+      <div id="focus"></div>
+     </div>
+     <div id="quote"></div>
+   </div>
+
+    <script type="text/babel">
+
+    var ShowTime = React.createClass({
+
+        getInitialState: function(){
+            return { hours: '00', minutes: '00' };
+        },
+
+        componentDidMount: function() {
+            this.timer = setInterval(this.tick, 500);
+        },
+
+        componentWillUnmount: function(){
+            clearInterval(this.timer);
+        },
+
+        tick: function() {
+         var date = new Date();
+         var h = date.getHours();
+         var m = date.getMinutes();
+
+         if (h < 10) {
+           h = '0' + h;
+         }
+         if (m < 10) {
+           m = '0' + m;
+         }
+
+         this.setState({hours: h, minutes: m});
+        },
+
+        render: function() {
+         var hours = this.state.hours;
+         var minutes = this.state.minutes;
+
+         return <p>{hours}:{minutes}</p>;
+        }
+    });
+
+      var ShowGreeting = React.createClass({
+         render: function() {
+
+          var greeting, hrs = this.props.date.getHours();
+
+          if (hrs >=  0) greeting = "Mornin'";
+          if (hrs >  6) greeting = "Good morning";
+          if (hrs > 12) greeting = "Good afternoon";
+          if (hrs > 17) greeting = "Good evening";
+          if (hrs > 22) greeting = "Good night";
+
+           return (
+             <p>
+               {greeting}, Vesselina.
+             </p>
+           );
+         }
+        });
+
+        focus = ["Chillin' out", "Finish laptop repair", "Be awesome",
+                    "Watch a movie", "Listen to a new song", "Be productive",
+                    "Don't die", "Update to Windows X", "Factory Restore the HTC",
+                    "Finish a video", "Start new video", "Focus",
+                    "Learn a new word", "Learn something new", "Study",
+                    "Back up your phone", "Patience", "Am I dreaming right now?",
+                    "Take a nap", "Get things done",
+                     "Get involved in an open source programming project",
+                    "Teach yourself a card trick", "Start a workout routine",
+                     "Go on a wandering walk",
+                    "Create magic", "Survive", "Smile :)",
+                    "Make someone laugh", "Tell a joke", "Enjoy",
+                    "Be a good girl!", "Don't be a good girl! ;)", "Work",
+                    "Be happy", "Hakuna matata ;)", "Have a tea with a friend",
+                    "Pizza", "Clean", "Take some photos",
+                    "Exchange massages with your partner", "Play a card game",
+                     "Revisit a favorite book or favorite movie.",
+                    "Practice origami", "Read a book", "Buy a book",
+                    "Cook something"];
+
+        var TodayFocus = React.createClass({
+         render: function() {
+           return (
+               <p>{focus[this.props.date.getDate()]}</p>
+           );
+
+         }
+        });
+
+
+        // quote = [
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: },
+        //  { quote: , author: }
+        //
+        // ];
+setInterval(function() {
+       ReactDOM.render(
+         <ShowGreeting date={new Date()} />,
+         document.getElementById('greeting')
+       );
+
+       ReactDOM.render(
+        <TodayFocus date={new Date()} />,
+        document.getElementById('focus')
+       );
+
+       ReactDOM.render(
+           < ShowTime />,
+           document.getElementById( 'time' )
+       );
+
+       updateWeather();
+}, 5000);
+
+    </script>
+
+    <script>
+    var updateWeather = function() {
+
+
+      $.ajax({
+       type: "GET",
+       url: "http://api.openweathermap.org/data/2.5/weather",
+       dataType: 'jsonp',
+       data: { appid: "90ed698b1f3e47cf572fc4e4cbe2462c",  id: "727011", lang: "en"},
+       success: function(res) {
+
+        var icons = [];
+        icons['01d'] = 'clear_s';
+        icons['01n'] = 'clear_n';
+        icons['02d'] = 'clouds_s';
+        icons['02n'] = 'clouds_n';
+        icons['03d'] = 'clouds_s';
+        icons['03n'] = 'clouds_n';
+        icons['04d'] = 'clouds_s';
+        icons['04n'] = 'clouds_n';
+        icons['05n'] = 'clouds_n';
+        icons['05d'] = 'clouds_s';
+
+        icons['09d'] = 'rain_d';
+        icons['09n'] = 'rain_n';
+        icons['10d'] = 'rain_d';
+        icons['10n'] = 'rain_n';
+        icons['11d'] = 'storm';
+        icons['11n'] = 'storm';
+
+        icons['13d'] = 'snow';
+        icons['13n'] = 'snow';
+
+        icons['50d'] = 'mist';
+        icons['50n'] = 'mist_n';
+
+console.log(res.weather[0].icon);
+        $(".weather-icon").html("<img class='icon' src='img/" + icons[res.weather[0].icon] + ".png' />");
+        $(".weather-temperature").html(Math.round(res.main.temp - 273.15) + '°C');
+      //  $(".weather-description").append(res.weather[0].description);
+        $(".weather-city").html(res.name);
+       }
+      });
+
+     };
+    </script>
+
+
+  </body>
+</html>
